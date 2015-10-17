@@ -1,38 +1,41 @@
 import Text.Printf (printf)
 
--- This function should return a list [area, volume].
-solve :: Int -> Int -> [Int] -> [Int] -> [Double]
-solve l r a b = []
+f :: [Int] -> [Int] -> Double -> Double
+f a b x = sum [ an * (x ** bn) | (an, bn) <- zip a' b' ]
+    where
+        a' = map fromIntegral a
+        b' = map fromIntegral b
 
--- F
---f a b x = sum [ (fromIntegral an) * ((fromIntegral x) ** (fromIntegral bn)) | (an, bn) <- zip a b ]
-f a b x = sum [ an * (x ** bn) | (an, bn) <- zip a b ]
-f' = f a b
-
--- Area Integral
-delta = 0.001 
-
---integrate :: Num a => (Double -> Double) -> Int -> Int -> Double
+integrate :: Num a => (Double -> Double) -> Int -> Int -> Double
 integrate fab l r = sum [ (fab c) * delta | c <-  [l',l'+delta..r'] ++ [r']]
     where
+        delta = 0.001
         r' = fromIntegral r
         l' = fromIntegral l
 
--- volume
+volume :: (Double -> Double) -> Int -> Int -> Double
 volume fab l r = pi * integrate r2 l r
     where 
         r2 y = (fab y) * (fab y)
 
--- Test
-a = [1..5]
-b = [6..10]
-l = 1
-r = 4
+-- This function should return a list [area, volume].
+solve :: Int -> Int -> [Int] -> [Int] -> [Double]
+solve l r a b = [ integ, vol]
+    where 
+        f' = f a b
+        vol = volume f' l r
+        integ = integrate f' l r
 
-vol = volume f' l r
-integ = integrate f' l r
+main = do
+      la <- getLine
+      lb <- getLine
+      lr <- getLine
+      let 
+          as = [ read a :: Int | a <- words la ]
+          bs = [ read b :: Int | b <- words lb ]
+          rs = [ read r :: Int | r <- words lr ]
+          l = rs !! 0 
+          r = rs !! 1
+          result = solve l r as bs
+      mapM_ (printf "%.1f\n") result
 
-
---Input/Output.
---main :: IO ()
---main = getContents >>= mapM_ (printf "%.1f\n"). (\[a, b, [l, r]] -> solve l r a b). map (map read. words). lines
