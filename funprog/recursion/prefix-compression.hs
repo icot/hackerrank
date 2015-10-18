@@ -5,13 +5,19 @@ prefix (x:xs) (y:ys)
     | x == y = x : prefix xs ys
     | otherwise = []
 
+remove p str = drop (length p) str
 
-remove p str = ...
+output :: [Char] -> [Char]
+output str = l ++ " " ++ str
+    where l = show (length(str))
 
 main :: IO ()
 main = do
-    a <- getLine
-    b <- getLine
+    x <- getLine
+    y <- getLine
     let 
-        p = prefix a b
-    print p
+        p = prefix x y
+        x' = remove p x
+        y' = remove p y
+        out = [p, x', y'] 
+    mapM_ putStrLn (map output out)
